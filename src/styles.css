@@ -82,6 +82,14 @@ button,a,input { -webkit-tap-highlight-color:transparent; }
 .pin-actions .pin-like {height:40px;width:40px;}
 .pin-actions button {transition:background-color .2s,color .2s,transform .2s;}
 .pin-actions button:active {transform:scale(.93);}
+.pin-actions .pin-like {position:relative;overflow:visible;}
+@keyframes heart-pop {0%{transform:scale(.3);}45%{transform:scale(1.45) rotate(-6deg);}72%{transform:scale(.9) rotate(0deg);}100%{transform:scale(1);}}
+@keyframes like-burst {from{opacity:.75;transform:scale(.55);}to{opacity:0;transform:scale(1.85);}}
+@keyframes save-bounce {0%{transform:scale(1);}38%{transform:scale(.86);}72%{transform:scale(1.08);}100%{transform:scale(1);}}
+.pin-like[aria-pressed="true"] svg {animation:heart-pop .55s cubic-bezier(.22,1,.36,1);}
+.pin-like[aria-pressed="true"]::before {content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 2px currentColor,0 0 16px 2px currentColor;animation:like-burst .6s ease-out forwards;pointer-events:none;}
+.pin-save[aria-pressed="true"] {animation:save-bounce .45s ease-out;}
+.pin-save[aria-pressed="true"] svg {animation:save-bounce .55s cubic-bezier(.22,1,.36,1) .04s;}
 @media(hover:hover) and (pointer:fine){.pin-image:hover > img {transform:scale(1.045);}.pin-image:hover .pin-overlay {opacity:1;}.pin-image:hover .pin-actions {opacity:1;transform:translateY(0);pointer-events:auto;}}
 .pin-category {position:absolute;bottom:13px;left:13px;color:var(--image-ink);font-size:11px;}
 .pin-meta {padding:10px 2px 0;}
