@@ -53,7 +53,7 @@ function Index() {
    <div className="category-row" aria-label="Categories">{categories.map(item=><Button key={item} variant={category===item?'selected':'pill'} className="category" aria-pressed={category===item} onClick={()=>setCategory(item)}>{item==='For you'&&<Sparkles size={13}/>} {item}</Button>)}</div>
    <section className="gallery-area">
     <div className="gallery-heading"><h2>{tab==='Saved'?<Bookmark size={17}/>:<Compass size={17}/>} {tab==='Saved'?'Your saved inspiration':query?`Results for “${query}”`:category==='For you'?'Picked for your curious mind':`${category} inspiration`}<span>{filtered.length} ideas to explore</span></h2><Button variant="nav" className="sort" onClick={()=>setSort(v=>v==='Curated'?'Popular':'Curated')}><SlidersHorizontal size={13}/>{sort}<ChevronDown size={13}/></Button></div>
-    {filtered.length?<div className="masonry">{filtered.map((pin,index)=><article className="pin" key={pin.id}>
+    {filtered.length?<div className="masonry">{filtered.map((pin,index)=><article className="pin" key={pin.id} style={{'--i':Math.min(index,14)} as React.CSSProperties}>
      <div className={`pin-image ${pin.height} ${activeCard===pin.id?'is-active':''}`}>
       <img src={pin.image} alt={pin.title} width={512} height={768} loading={index<5?'eager':'lazy'}/><div className="pin-overlay"><span className="pin-category">{pin.category}</span></div>
       <Button variant="image" className="pin-open" aria-label={`Open ${pin.title}`} onPointerDown={e=>{pointerType.current=e.pointerType;}} onKeyDown={()=>{pointerType.current='keyboard';}} onClick={()=>{if(pointerType.current==='touch'&&activeCard!==pin.id){setActiveCard(pin.id);return;}setSelected(pin);}}/>
