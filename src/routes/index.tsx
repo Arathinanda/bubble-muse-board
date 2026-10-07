@@ -31,7 +31,7 @@ function Index() {
  useEffect(()=>{const id=new URLSearchParams(window.location.search).get('pin');if(id)setSelected(initialPins.find(p=>p.id===id)??null);},[]);
  const addPin=(event:React.FormEvent)=>{event.preventDefault();if(!file||!title.trim())return;const newPin:Pin={id:crypto.randomUUID(),image:URL.createObjectURL(file),title:title.trim(),category:uploadCategory,author:'You',height:'medium',likes:0};setPins(p=>[newPin,...p]);setCreate(false);setTitle('');setFile(null);setTab('Explore');setCategory('For you');setQuery('');setNotice('Your image was added to this session');};
  return <>
-  <div className="ambient" aria-hidden="true">{Array.from({length:18},(_,i)=><i key={i} className="particle" style={{left:`${(i*37)%100}%`,top:`${(i*19)%100}%`,animationDelay:`-${i}s`}}/>)}</div>
+  <div className="ambient" aria-hidden="true">{Array.from({length:6},(_,i)=><i key={`bubble-${i}`} className="bubble"/>)}{Array.from({length:18},(_,i)=><i key={i} className="particle" style={{left:`${(i*37)%100}%`,top:`${(i*19)%100}%`,animationDelay:`-${i}s`}}/>)}</div>
   <header className="site-nav">
    <a href="/" className="brand" aria-label="Folia home"><Leaf className="brand-mark" strokeWidth={2.5}/>folia<span className="text-primary">.</span></a>
    <nav className="nav-links" aria-label="Main navigation">{['Explore','Saved'].map(item=><Button key={item} variant="nav" onClick={()=>{setTab(item);setCategory('For you');}} className={tab===item?'nav-active':''}>{item==='Saved'&&<Bookmark className="hidden sm:block"/>}{item}</Button>)}</nav>
