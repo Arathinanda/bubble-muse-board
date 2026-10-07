@@ -14,6 +14,9 @@ function Index() {
  const [category,setCategory]=useState('For you');
  const [tab,setTab]=useState('Explore');
  const [saved,setSaved]=useState<string[]>([]);
+ const [liked,setLiked]=useState<string[]>([]);
+ const [activeCard,setActiveCard]=useState<string|null>(null);
+ const pointerType=useRef('mouse');
  const [pins,setPins]=useState(initialPins);
  const [selected,setSelected]=useState<Pin|null>(null);
  const [create,setCreate]=useState(false);
@@ -25,6 +28,12 @@ function Index() {
  const inputRef=useRef<HTMLInputElement>(null);
  useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(''),3000);return()=>clearTimeout(timer);},[notice]);
  const toggleSave=(id:string)=>{setSaved(current=>current.includes(id)?current.filter(x=>x!==id):[...current,id]);};
+ const toggleLike=(id:string)=>{setLiked(current=>current.includes(id)?current.filter(x=>x!==id):[...current,id]);};
+ useEffect(()=>{
+  const dismiss=(event:PointerEvent)=>{if(event.target instanceof Element&&!event.target.closest('.pin-image'))setActiveCard(null);};
+  document.addEventListener('pointerdown',dismiss);
+  return()=>document.removeEventListener('pointerdown',dismiss);
+ },[]);
  const filtered=pins.filter(pin=>(tab!=='Saved'||saved.includes(pin.id))&&(category==='For you'||pin.category===category)&&`${pin.title} ${pin.author} ${pin.category}`.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>sort==='Popular'?b.likes-a.likes:0);
  const initials=(name:string)=>name.split(' ').slice(0,2).map(x=>x[0]).join('');
  const share=async(pin:Pin)=>{try{await navigator.clipboard.writeText(`${pin.title} — ${window.location.origin}?pin=${pin.id}`);setNotice('Link copied to clipboard');}catch{setNotice('Sharing is not available in this browser');}};
@@ -45,10 +54,14 @@ function Index() {
    <section className="gallery-area">
     <div className="gallery-heading"><h2>{tab==='Saved'?<Bookmark size={17}/>:<Compass size={17}/>} {tab==='Saved'?'Your saved inspiration':query?`Results for “${query}”`:category==='For you'?'Picked for your curious mind':`${category} inspiration`}<span>{filtered.length} ideas to explore</span></h2><Button variant="nav" className="sort" onClick={()=>setSort(v=>v==='Curated'?'Popular':'Curated')}><SlidersHorizontal size={13}/>{sort}<ChevronDown size={13}/></Button></div>
     {filtered.length?<div className="masonry">{filtered.map((pin,index)=><article className="pin" key={pin.id}>
-     <div className={`pin-image ${pin.height}`} role="button" tabIndex={0} aria-label={`Open ${pin.title}`} onClick={()=>setSelected(pin)} onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();setSelected(pin);}}}>
+     <div className={`pin-image ${pin.height} ${activeCard===pin.id?'is-active':''}`}>
       <img src={pin.image} alt={pin.title} width={512} height={768} loading={index<5?'eager':'lazy'}/><div className="pin-overlay"><span className="pin-category">{pin.category}</span></div>
-      <Button variant="save" className={`pin-save ${saved.includes(pin.id)?'is-saved':''}`} aria-label={`${saved.includes(pin.id)?'Unsave':'Save'} ${pin.title}`} onClick={e=>{e.stopPropagation();toggleSave(pin.id);}}><Bookmark size={12} fill={saved.includes(pin.id)?'currentColor':'none'}/>{saved.includes(pin.id)?'Saved':'Save'}</Button>
-     </div><div className="pin-meta"><h3>{pin.title}</h3><div className="pin-author"><div className="avatar">{initials(pin.author)}</div>{pin.author}<span className="pin-likes"><Heart size={10}/>{pin.likes}</span></div></div>
+      <Button variant="image" className="pin-open" aria-label={`Open ${pin.title}`} onPointerDown={e=>{pointerType.current=e.pointerType;}} onKeyDown={()=>{pointerType.current='keyboard';}} onClick={()=>{if(pointerType.current==='touch'&&activeCard!==pin.id){setActiveCard(pin.id);return;}setSelected(pin);}}/>
+      <div className="pin-actions">
+       <Button variant="save" className="pin-save" aria-pressed={saved.includes(pin.id)} aria-label={`${saved.includes(pin.id)?'Unsave':'Save'} ${pin.title}`} onClick={()=>toggleSave(pin.id)}><Bookmark size={12} fill={saved.includes(pin.id)?'currentColor':'none'}/>{saved.includes(pin.id)?'Saved':'Save'}</Button>
+       <Button variant="imageLike" className="pin-like" size="icon" title={liked.includes(pin.id)?'Unlike':'Like'} aria-pressed={liked.includes(pin.id)} aria-label={`${liked.includes(pin.id)?'Unlike':'Like'} ${pin.title}`} onClick={()=>toggleLike(pin.id)}><Heart fill={liked.includes(pin.id)?'currentColor':'none'}/></Button>
+      </div>
+     </div><div className="pin-meta"><h3>{pin.title}</h3><div className="pin-author"><div className="avatar">{initials(pin.author)}</div>{pin.author}<span className="pin-likes"><Heart size={10} fill={liked.includes(pin.id)?'currentColor':'none'}/>{pin.likes+(liked.includes(pin.id)?1:0)}</span></div></div>
     </article>)}</div>:<div className="empty"><Bookmark size={32}/><h2>{tab==='Saved'?'Your inspiration starts here':'No ideas found — yet'}</h2><p>{tab==='Saved'?'Save a few favorites and make this space your own.':'Try a different search or explore another category.'}</p><Button variant="selected" className="mt-5" onClick={()=>{setTab('Explore');setQuery('');setCategory('For you');}}>Explore ideas<ArrowUpRight/></Button></div>}
     {filtered.length>0&&<div className="end-note"><Sparkles size={14}/>A little inspiration goes a long way.</div>}
    </section>

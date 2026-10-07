@@ -13,6 +13,8 @@ const buttonVariants = cva(
         selected: "rounded-full bg-primary text-primary-foreground hover:bg-primary/90",
         nav: "rounded-full text-muted-foreground hover:bg-accent hover:text-foreground",
         save: "rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+        image: "rounded-none bg-transparent text-foreground",
+        imageLike: "rounded-full bg-card/95 text-foreground shadow-sm hover:bg-card aria-pressed:text-destructive",
         default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
