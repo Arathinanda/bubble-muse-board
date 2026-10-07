@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep gallery seed content in a browser-safe data module and gallery interactions client-side; this presentation-first demo requires no server storage.
+- Use semantic tokens and shared Button variants for gallery styling; this keeps the visual system consistent.
