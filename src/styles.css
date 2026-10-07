@@ -71,12 +71,18 @@ button,a,input { -webkit-tap-highlight-color:transparent; }
 .pin {break-inside:avoid;margin:0 0 22px;}
 .pin-image {position:relative;border-radius:8px;overflow:hidden;cursor:pointer;background:var(--muted);}
 .pin-image.tall {height:318px;} .pin-image.medium {height:264px;} .pin-image.short {height:211px;}
-.pin-image > img {height:100%;width:100%;object-fit:cover;transition:transform .6s;}
-.pin-image:hover > img {transform:scale(1.035);}
-.pin-overlay {position:absolute;inset:0;background:linear-gradient(transparent 50%,var(--overlay));opacity:0;transition:opacity .2s;pointer-events:none;}
-.pin-image:hover .pin-overlay,.pin-image:focus-within .pin-overlay {opacity:1;}
-.pin-save {position:absolute;right:10px;top:10px;opacity:0;transition:opacity .2s;height:32px;font-size:11px;}
-.pin-image:hover .pin-save,.pin-image:focus-within .pin-save,.pin-save.is-saved {opacity:1;}
+.pin-image > img {height:100%;width:100%;object-fit:cover;transition:transform .55s cubic-bezier(.22,1,.36,1);}
+.pin-image.is-active > img,.pin-image:focus-within > img {transform:scale(1.045);}
+.pin-overlay {position:absolute;inset:0;background:linear-gradient(transparent 50%,var(--overlay));opacity:0;transition:opacity .32s ease;pointer-events:none;}
+.pin-image.is-active .pin-overlay,.pin-image:focus-within .pin-overlay {opacity:1;}
+.pin-open {position:absolute;inset:0;width:100%;height:100%;padding:0;z-index:1;border-radius:8px;}
+.pin-actions {position:absolute;right:10px;top:10px;z-index:2;display:flex;align-items:center;gap:7px;opacity:0;transform:translateY(7px);pointer-events:none;transition:opacity .28s ease,transform .38s cubic-bezier(.22,1,.36,1);}
+.pin-image.is-active .pin-actions,.pin-image:focus-within .pin-actions {opacity:1;transform:translateY(0);pointer-events:auto;}
+.pin-actions .pin-save {height:40px;min-width:76px;font-size:11px;padding:0 12px;}
+.pin-actions .pin-like {height:40px;width:40px;}
+.pin-actions button {transition:background-color .2s,color .2s,transform .2s;}
+.pin-actions button:active {transform:scale(.93);}
+@media(hover:hover) and (pointer:fine){.pin-image:hover > img {transform:scale(1.045);}.pin-image:hover .pin-overlay {opacity:1;}.pin-image:hover .pin-actions {opacity:1;transform:translateY(0);pointer-events:auto;}}
 .pin-category {position:absolute;bottom:13px;left:13px;color:var(--image-ink);font-size:11px;}
 .pin-meta {padding:10px 2px 0;}
 .pin-meta h3 {font-size:12px;font-weight:600;margin:0 0 8px;line-height:1.45;}
